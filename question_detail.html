@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 보기 - GPT 문제 메이커</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .question-header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 16px rgba(255, 71, 87, 0.3);
+        }
+
+        .content-tabs {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .tab-content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .question-item {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .answer-item {
+            background: #f0fff4;
+            border-left: 4px solid #2ed573;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .answer-number {
+            font-weight: bold;
+            color: #2ed573;
+            margin-bottom: 10px;
+        }
+
+        .answer-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .study-mode {
+            margin-top: 30px;
+        }
+
+        .study-question {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .study-question.revealed {
+            border-color: #2ed573;
+        }
+
+        .reveal-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .reveal-btn:hover {
+            background: #5a67d8;
+        }
+
+        .revealed-answer {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0fff4;
+            border-radius: 10px;
+            border-left: 4px solid #2ed573;
+            display: none;
+        }
+
+        .revealed-answer.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 40px;
+            color: #ff4757;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #5a67d8;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+            
+            .question-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tab-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">대시보드</a>
+                <a href="mypage.html" class="nav-link">마이페이지</a>
+                <a href="logout.php" class="nav-link">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="dashboard.html" class="back-link">
+            ← 대시보드로 돌아가기
+        </a>
+
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <div>문제를 불러오는 중...</div>
+        </div>
+
+        <div id="errorState" class="error-state" style="display: none;">
+            <div>❌</div>
+            <div>문제를 불러올 수 없습니다.</div>
+        </div>
+
+        <div id="questionContent" style="display: none;">
+            <div class="question-header">
+                <h1 class="question-title" id="questionTitle">문제 제목</h1>
+                <div class="question-meta">
+                    <div class="meta-item">
+                        <span>📅</span>
+                        <span id="createdDate">생성일</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>📄</span>
+                        <span id="pdfFileName">PDF 파일명</span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" onclick="printQuestion()">🖨️ 인쇄</button>
+                    <button class="btn btn-secondary" onclick="downloadQuestion()">📥 다운로드</button>
+                    <button class="btn btn-danger" onclick="deleteQuestion()">🗑️ 삭제</button>
+                </div>
+            </div>
+
+            <div class="content-tabs">
+                <div class="tab-header">
+                    <button class="tab-button active" onclick="switchTab('questions')">
+                        📝 문제 보기
+                    </button>
+                    <button class="tab-button" onclick="switchTab('answers')">
+                        ✅ 정답 보기
+                    </button>
+                    <button class="tab-button" onclick="switchTab('study')">
+                        📚 학습 모드
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="questionsTab" class="tab-pane active">
+                        <div id="questionsList">
+                            <!-- 문제들이 여기에 동적으로 로드됩니다 -->
+                        </div>
+                    </div>
+
+                    <div id="answersTab" class="tab-pane">
+                        <div id="answersList">
+                            <!-- 정답들이 여기에 동적으로 로드됩니다 -->
+                        </div>
+                    </div>
+
+                    <div id="studyTab" class="tab-pane">
+                        <div class="study-mode">
+                            <p style="margin-bottom: 20px; color: #666;">
+                                <strong>학습 모드:</strong> 문제를 먼저 풀어보고 '정답 보기' 버튼을 클릭하여 답을 확인하세요.
+                            </p>
+                            <div id="studyQuestions">
+                                <!-- 학습용 문제들이 여기에 동적으로 로드됩니다 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = null;
+        let questionId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // URL에서 question ID 추출 (디버그 추가)
+            console.log('=== DEBUG: URL Parsing ===');
+            console.log('Full URL:', window.location.href);
+            console.log('Search params:', window.location.search);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            questionId = urlParams.get('id');
+            
+            console.log('Extracted question ID:', questionId);
+            console.log('Question ID type:', typeof questionId);
+            
+            if (!questionId) {
+                console.error('No question ID found in URL');
+                showError('문제 ID가 없습니다.');
+                return;
+            }
+
+            checkAuth();
+            loadQuestion();
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('api/check_login.php');
+                const result = await response.json();
+                
+                if (!result.logged_in) {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function loadQuestion() {
+            try {
+                console.log('=== DEBUG: Loading Question ===');
+                console.log('Requesting URL:', `api/get_question.php?id=${questionId}`);
+                
+                const response = await fetch(`api/get_question.php?id=${questionId}`);
+                console.log('Response status:', response.status);
+                
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                if (result.success) {
+                    currentQuestion = result.question;
+                    displayQuestion();
+                } else {
+                    showError(result.message || '문제를 불러올 수 없습니다.');
+                }
+            } catch (error) {
+                console.error('Load question error:', error);
+                showError('서버 오류가 발생했습니다.');
+            }
+        }
+
+        function displayQuestion() {
+            // 로딩 상태 숨기기
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('questionContent').style.display = 'block';
+
+            // 기본 정보 표시
+            document.getElementById('questionTitle').textContent = currentQuestion.title;
+            document.getElementById('createdDate').textContent = new Date(currentQuestion.created_at).toLocaleDateString('ko-KR');
+            document.getElementById('pdfFileName').textContent = currentQuestion.pdf_filename;
+
+            // 문제와 정답 파싱 및 표시
+            parseAndDisplayContent();
+        }
+
+        function parseAndDisplayContent() {
+            const questions = parseQuestions(currentQuestion.question_text);
+            const answers = parseAnswers(currentQuestion.answer_text);
+
+            displayQuestions(questions);
+            displayAnswers(answers);
+            displayStudyMode(questions, answers);
+        }
+
+        function parseQuestions(questionText) {
+            const questions = [];
+            const lines = questionText.split('\n');
+            let currentQuestion = '';
+            let questionNumber = 0;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.match(/^Q\d+\./)) {
+                    if (currentQuestion) {
+                        questions.push({
+                            number: questionNumber,
+                            text: currentQuestion.trim()
+                        });
+                    }
+                    questionNumber++;
+                    currentQuestion = line.replace(/^Q\d+\./, '').trim();
+                } else if (line && !line.match(/^A\d+\./)) {
+                    currentQuestion += ' ' + line;
+                }
+            });
+
+            if (currentQuestion) {
+                questions.push({
+                    number: questionNumber,
+                    text: currentQuestion.trim()
+                });
+            }
+
+            return questions;
+        }
+
+        function parseAnswers(answerText) {
+            const answers = [];
+            const lines = answerText.split('\n');
+            let currentAnswer = '';
+            let answerNumber = 0;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.match(/^A\d+\./)) {
+                    if (currentAnswer) {
+                        answers.push({
+                            number: answerNumber,
+                            text: currentAnswer.trim()
+                        });
+                    }
+                    answerNumber++;
+                    currentAnswer = line.replace(/^A\d+\./, '').trim();
+                } else if (line && !line.match(/^Q\d+\./)) {
+                    currentAnswer += ' ' + line;
+                }
+            });
+
+            if (currentAnswer) {
+                answers.push({
+                    number: answerNumber,
+                    text: currentAnswer.trim()
+                });
+            }
+
+            return answers;
+        }
+
+        function displayQuestions(questions) {
+            const container = document.getElementById('questionsList');
+            container.innerHTML = questions.map(q => `
+                <div class="question-item">
+                    <div class="question-number">Q${q.number}.</div>
+                    <div class="question-text">${q.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function displayAnswers(answers) {
+            const container = document.getElementById('answersList');
+            container.innerHTML = answers.map(a => `
+                <div class="answer-item">
+                    <div class="answer-number">A${a.number}.</div>
+                    <div class="answer-text">${a.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function displayStudyMode(questions, answers) {
+            const container = document.getElementById('studyQuestions');
+            container.innerHTML = questions.map((q, index) => `
+                <div class="study-question" id="study-${index}">
+                    <div class="question-number">Q${q.number}.</div>
+                    <div class="question-text">${q.text}</div>
+                    <button class="reveal-btn" onclick="revealAnswer(${index})">정답 보기</button>
+                    <div class="revealed-answer" id="answer-${index}">
+                        <strong>정답:</strong> ${answers[index]?.text || '정답을 찾을 수 없습니다.'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function revealAnswer(index) {
+            const studyQuestion = document.getElementById(`study-${index}`);
+            const revealedAnswer = document.getElementById(`answer-${index}`);
+            const button = studyQuestion.querySelector('.reveal-btn');
+            
+            studyQuestion.classList.add('revealed');
+            revealedAnswer.classList.add('show');
+            button.style.display = 'none';
+        }
+
+        function switchTab(tabName) {
+            // 모든 탭 버튼과 패널 비활성화
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('errorState').innerHTML = `
+                <div>❌</div>
+                <div>${message}</div>
+            `;
+        }
+
+        function printQuestion() {
+            window.print();
+        }
+
+        async function downloadQuestion() {
+            try {
+                const response = await fetch(`api/download_question.php?id=${questionId}`);
+                const blob = await response.blob();
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${currentQuestion.title}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('다운로드에 실패했습니다.');
+            }
+        }
+
+        async function deleteQuestion() {
+            if (!confirm('정말로 이 문제를 삭제하시겠습니까? 삭제된 문제는 복구할 수 없습니다.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`api/delete_question.php?id=${questionId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('문제가 삭제되었습니다.');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert(result.message || '삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - GPT 문제 메이커</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .welcome-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .welcome-desc {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 문제 생성 옵션 */
+        .question-options {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid #e0e5ff;
+            display: none;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            display: block;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-generate {
+            background: linear-gradient(45deg, #2ed573, #17c0eb);
+            font-size: 1.1rem;
+            padding: 15px 30px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .questions-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .questions-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-set-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .question-set-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-set-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .question-set-info {
+            font-size: 0.8rem;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* 성공 모달 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #2ed573;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #2ed573, #17c0eb);
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            font-size: 1.1rem;
+            padding: 15px 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="user-menu">
+                <div class="nav-links">
+                    <a href="dashboard.html" class="nav-link">대시보드</a>
+                    <a href="mypage.html" class="nav-link">마이페이지</a>
+                    <a href="logout.php" class="nav-link">로그아웃</a>
+                </div>
+                <div class="user-info" id="userInfo">
+                    로딩 중...
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">문제 생성 대시보드</h1>
+            <p class="welcome-desc">PDF 강의자료를 업로드하면 AI가 예상 시험문제를 자동으로 생성해드립니다.</p>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">문제 생성 중...</div>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">📄 PDF 업로드</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">PDF 파일을 드래그하거나 클릭하여 업로드</div>
+                    <div class="upload-hint">최대 10MB, PDF 파일만 지원</div>
+                    <button class="btn" onclick="selectFile()">
+                        파일 선택
+                    </button>
+                </div>
+                
+                <input type="file" id="fileInput" accept=".pdf" />
+
+                <!-- 문제 생성 옵션 -->
+                <div class="question-options" id="questionOptions">
+                    <h3 style="margin-bottom: 20px; color: #333;">📝 문제 생성 설정</h3>
+                    
+                    <div class="option-group">
+                        <label class="option-label">문제 개수: <span id="questionCountValue">5</span>개</label>
+                        <div class="slider-container">
+                            <span>1</span>
+                            <input type="range" id="questionCount" class="slider" min="1" max="10" value="5">
+                            <span>10</span>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-label">문제 유형</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="typeBoth" name="questionType" value="both" checked>
+                                <label for="typeBoth">객관식 + 주관식</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="typeMultiple" name="questionType" value="multiple_choice">
+                                <label for="typeMultiple">객관식만</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="typeSubjective" name="questionType" value="subjective">
+                                <label for="typeSubjective">주관식만</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-generate" onclick="startGeneration()">
+                        🚀 문제 생성 시작
+                    </button>
+                </div>
+                
+                <div class="loading" id="uploadLoading">
+                    <div class="spinner"></div>
+                    <div>파일 업로드 및 문제 생성 중...</div>
+                </div>
+            </div>
+
+            <div class="questions-sidebar">
+                <h2 class="section-title">📚 내 문제집 목록</h2>
+                
+                <div class="questions-list" id="questionsList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>문제집 목록 로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 성공 모달 -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h3 class="modal-title">문제 생성 완료!</h3>
+            <p class="modal-message" id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="viewQuestionsBtn">
+                    📝 생성된 문제 보기
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    ✨ 새 문제 만들기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let generatedQuestionSetId = null;
+
+        // 페이지 로드시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📚 대시보드 로드됨');
+            
+            // 기본 설정
+            document.getElementById('userInfo').textContent = 'test@example.com';
+            
+            setupUpload();
+            setupSlider();
+            loadQuestionSets();
+        });
+
+        // 파일 선택
+        function selectFile() {
+            document.getElementById('fileInput').click();
+        }
+
+        // 업로드 설정
+        function setupUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // 드래그 앤 드롭
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            // 파일 선택
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+        }
+
+        // 파일 처리
+        function handleFile(file) {
+            console.log('📄 파일 선택됨:', file.name);
+            
+            if (!file.type.includes('pdf')) {
+                alert('PDF 파일만 업로드 가능합니다.');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB 이하여야 합니다.');
+                return;
+            }
+
+            selectedFile = file;
+            
+            // 업로드 영역 업데이트
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.innerHTML = `
+                <div class="upload-icon">✅</div>
+                <div class="upload-text">선택된 파일: ${file.name}</div>
+                <div class="upload-hint">아래에서 문제 생성 옵션을 설정하세요</div>
+                <button class="btn" onclick="resetFile()">다른 파일 선택</button>
+            `;
+            
+            // 옵션 표시
+            document.getElementById('questionOptions').style.display = 'block';
+        }
+
+        // 파일 초기화
+        function resetFile() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('questionOptions').style.display = 'none';
+            
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.innerHTML = `
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">PDF 파일을 드래그하거나 클릭하여 업로드</div>
+                <div class="upload-hint">최대 10MB, PDF 파일만 지원</div>
+                <button class="btn" onclick="selectFile()">파일 선택</button>
+            `;
+            
+            setupUpload(); // 이벤트 다시 설정
+        }
+
+        // 슬라이더 설정
+        function setupSlider() {
+            const slider = document.getElementById('questionCount');
+            const value = document.getElementById('questionCountValue');
+            
+            slider.addEventListener('input', function() {
+                value.textContent = this.value;
+            });
+        }
+
+        // 문제 생성 시작
+        function startGeneration() {
+            if (!selectedFile) {
+                alert('먼저 PDF 파일을 선택해주세요.');
+                return;
+            }
+
+            const title = prompt('문제집 제목을 입력하세요:', selectedFile.name.replace('.pdf', ''));
+            if (!title) return;
+
+            const questionCount = document.getElementById('questionCount').value;
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+
+            console.log('🚀 문제 생성 시작:', { title, questionCount, questionType });
+
+            // 진행률 표시
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('questionOptions').style.display = 'none';
+            updateProgress(10, 'PDF 업로드 중...');
+
+            // 실제 업로드 (여기서 API 호출)
+            uploadAndGenerate(selectedFile, title, questionCount, questionType);
+        }
+
+        // 업로드 및 생성
+        async function uploadAndGenerate(file, title, questionCount, questionType) {
+            const formData = new FormData();
+            formData.append('pdf_file', file);
+            formData.append('title', title);
+            formData.append('question_count', questionCount);
+            formData.append('question_type', questionType);
+
+            try {
+                updateProgress(30, 'AI 문제 생성 중...');
+                
+                const response = await fetch('api/upload_and_generate_v2.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateProgress(100, '문제 생성 완료!');
+                    generatedQuestionSetId = result.question_set_id;
+                    
+                    setTimeout(() => {
+                        showSuccessModal(title, result.total_questions);
+                    }, 1000);
+                } else {
+                    alert('문제 생성 실패: ' + result.message);
+                    resetGeneration();
+                }
+            } catch (error) {
+                console.error('업로드 오류:', error);
+                alert('업로드 중 오류가 발생했습니다.');
+                resetGeneration();
+            }
+        }
+
+        // 진행률 업데이트
+        function updateProgress(percent, text) {
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+
+        // 생성 초기화
+        function resetGeneration() {
+            document.getElementById('progressSection').style.display = 'none';
+            resetFile();
+        }
+
+        // 성공 모달 표시
+        function showSuccessModal(title, questionCount) {
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('modalMessage').textContent = `"${title}" 문제집이 성공적으로 생성되었습니다. (총 ${questionCount}개 문제)`;
+            
+            document.getElementById('viewQuestionsBtn').onclick = function() {
+                window.location.href = `question_list.html?set_id=${generatedQuestionSetId}`;
+            };
+            
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+            resetFile();
+            loadQuestionSets();
+        }
+
+        // 문제집 목록 로드
+        async function loadQuestionSets() {
+            try {
+                const response = await fetch('api/get_question_sets.php');
+                const result = await response.json();
+                
+                const questionsList = document.getElementById('questionsList');
+                
+                if (result.success && result.question_sets && result.question_sets.length > 0) {
+                    questionsList.innerHTML = result.question_sets.map(set => `
+                        <div class="question-set-item" onclick="openQuestionSet('${set.question_set_id}')">
+                            <div class="question-set-title">${set.pdf_filename}</div>
+                            <div class="question-set-info">
+                                <span>${set.total_questions}개 문제</span>
+                                <span>${new Date(set.created_at).toLocaleDateString('ko-KR')}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    questionsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📚</div>
+                            <div>아직 생성된 문제집이 없습니다.<br>PDF를 업로드해서 첫 문제집을 만들어보세요!</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('문제집 로딩 오류:', error);
+                document.getElementById('questionsList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <div>문제집 목록을 불러올 수 없습니다.</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 문제집 열기
+        function openQuestionSet(questionSetId) {
+            window.location.href = `question_list.html?set_id=${questionSetId}`;
+        }
+
+        // 모달 외부 클릭시 닫기
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

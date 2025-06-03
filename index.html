@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT 문제 메이커</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 50px 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin: 50px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border-color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .steps {
+            margin: 60px 0;
+        }
+
+        .steps-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .step-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .step-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 30px 20px;
+                margin: 20px 0;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="subtitle">강의자료를 업로드하면 AI가 예상 시험문제를 자동으로 만들어드립니다</div>
+        </header>
+
+        <div class="main-content">
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI 자동 문제 생성</div>
+                    <div class="feature-desc">GPT API를 활용하여 PDF 강의자료를 분석하고 예상 시험문제를 자동으로 생성합니다</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-title">PDF 업로드</div>
+                    <div class="feature-desc">강의 PPT, 교재, 노트 등 다양한 PDF 파일을 업로드하여 문제를 생성할 수 있습니다</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">문제 관리</div>
+                    <div class="feature-desc">생성된 문제와 정답을 저장하고 언제든지 다시 확인할 수 있습니다</div>
+                </div>
+            </div>
+
+            <div class="steps">
+                <h2 class="steps-title">이용 방법</h2>
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div>회원가입 후 로그인</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div>강의자료 PDF 업로드</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div>AI가 문제 자동 생성</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div>문제 확인 및 학습</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <a href="register.html" class="btn btn-primary">지금 시작하기</a>
+                <a href="login.html" class="btn btn-secondary">로그인</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 GPT 문제 메이커. 모든 권리 보유.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 로그인 상태 확인
+        fetch('api/check_login.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.logged_in) {
+                    // 이미 로그인된 사용자는 대시보드로 리다이렉트
+                    window.location.href = 'dashboard.html';
+                }
+            })
+            .catch(error => {
+                console.log('로그인 상태 확인 중 오류:', error);
+            });
+    </script>
+</body>
+</html>
