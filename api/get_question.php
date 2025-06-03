@@ -1,5 +1,5 @@
 <?php
-// api/get_question.php - 특정 문제 상세 조회
+// api/get_question.php - 기존 방식 그대로
 session_start();
 require_once '../config/database.php';
 require_once '../includes/auth.php';

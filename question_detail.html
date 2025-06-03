@@ -152,12 +152,20 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 40px;
+            width: 900px;
+            min-width: 900px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .tab-header {
             display: flex;
             background: #f8f9fa;
             border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
         }
 
         .tab-button {
@@ -189,6 +197,29 @@
         .tab-content {
             padding: 30px;
             min-height: 400px;
+            overflow-y: auto;
+            width: 900px;
+            max-width: 900px;
+            box-sizing: border-box;
+            flex: 1;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: #5a67d8;
         }
 
         .tab-pane {
@@ -275,6 +306,26 @@
             border-radius: 10px;
             border-left: 4px solid #2ed573;
             display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .revealed-answer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .revealed-answer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .revealed-answer::-webkit-scrollbar-thumb {
+            background: #2ed573;
+            border-radius: 3px;
+        }
+
+        .revealed-answer::-webkit-scrollbar-thumb:hover {
+            background: #27c968;
         }
 
         .revealed-answer.show {
@@ -335,6 +386,69 @@
             color: #5a67d8;
         }
 
+        /* 문제 네비게이션 스타일 */
+        .question-navigation {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .nav-prev {
+            justify-content: flex-start;
+        }
+
+        .nav-next {
+            justify-content: flex-end;
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .question-counter {
+            background: #f8f9ff;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            border: 1px solid #e0e5ff;
+        }
+
         footer {
             text-align: center;
             color: #666;
@@ -363,6 +477,84 @@
             
             .tab-header {
                 flex-direction: column;
+            }
+
+            .question-navigation {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-btn {
+                min-width: 100px;
+                font-size: 0.85rem;
+                padding: 10px 16px;
+            }
+
+            .question-counter {
+                order: -1;
+                align-self: center;
+            }
+
+            /* 모바일에서 탭 컨테이너 크기 조정 */
+            .content-tabs {
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+                margin: 0 auto 40px;
+            }
+
+            /* 모바일에서 탭 콘텐츠 크기 조정 */
+            .tab-content {
+                width: 100%;
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            /* 모바일에서 문제/정답 박스 크기 조정 */
+            .question-item,
+            .answer-item,
+            .study-question {
+                width: calc(100% - 40px);
+                min-width: calc(100% - 40px);
+                max-width: calc(100% - 40px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-tabs {
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+                margin: 0 10px 30px;
+            }
+
+            .question-item,
+            .answer-item,
+            .study-question {
+                padding: 15px;
+                margin-bottom: 15px;
+                width: calc(100% - 30px);
+                min-width: calc(100% - 30px);
+                max-width: calc(100% - 30px);
+            }
+
+            .tab-content {
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            .question-text,
+            .answer-text {
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+
+            .revealed-answer {
+                max-height: 150px;
+                font-size: 0.9rem;
+                padding: 12px;
             }
         }
     </style>
@@ -408,10 +600,22 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn" onclick="printQuestion()">🖨️ 인쇄</button>
                     <button class="btn btn-secondary" onclick="downloadQuestion()">📥 다운로드</button>
                     <button class="btn btn-danger" onclick="deleteQuestion()">🗑️ 삭제</button>
                 </div>
+            </div>
+
+            <!-- 문제 네비게이션 -->
+            <div class="question-navigation">
+                <button class="nav-btn nav-prev" id="prevBtn" onclick="goToPreviousQuestion()" disabled>
+                    <span class="nav-icon">←</span>
+                    <span class="nav-text">이전 문제</span>
+                </button>
+                <span class="question-counter" id="questionCounter">문제 1 / 5</span>
+                <button class="nav-btn nav-next" id="nextBtn" onclick="goToNextQuestion()" disabled>
+                    <span class="nav-text">다음 문제</span>
+                    <span class="nav-icon">→</span>
+                </button>
             </div>
 
             <div class="content-tabs">
@@ -462,6 +666,9 @@
     <script>
         let currentQuestion = null;
         let questionId = null;
+        let allQuestionsInSet = [];
+        let currentQuestionIndex = -1;
+        let questionSetId = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             // URL에서 question ID 추출 (디버그 추가)
@@ -507,18 +714,135 @@
                 const response = await fetch(`api/get_question.php?id=${questionId}`);
                 console.log('Response status:', response.status);
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const result = await response.json();
                 console.log('Response data:', result);
                 
-                if (result.success) {
+                if (result.success && result.question) {
                     currentQuestion = result.question;
                     displayQuestion();
+                    
+                    // 문제집 데이터 로드는 별도로 실행 (실패해도 메인 기능에 영향 없음)
+                    loadQuestionSetData().catch(err => {
+                        console.warn('Question set loading failed:', err);
+                    });
                 } else {
                     showError(result.message || '문제를 불러올 수 없습니다.');
                 }
             } catch (error) {
                 console.error('Load question error:', error);
-                showError('서버 오류가 발생했습니다.');
+                showError('서버 오류가 발생했습니다. 페이지를 새로고침해보세요.');
+            }
+        }
+
+        async function loadQuestionSetData() {
+            try {
+                // 파일명에서 question_set_id 추출
+                if (!currentQuestion || !currentQuestion.pdf_filename) {
+                    console.warn('No filename available for set_id extraction');
+                    updateNavigationButtons();
+                    return;
+                }
+                
+                const fileName = currentQuestion.pdf_filename;
+                console.log('Trying to extract set_id from filename:', fileName);
+                
+                let setId = null;
+                if (fileName.startsWith('qs_')) {
+                    const parts = fileName.split('_');
+                    if (parts.length >= 4) {
+                        setId = `${parts[0]}_${parts[1]}_${parts[2]}_${parts[3]}`;
+                        console.log('Extracted set_id:', setId);
+                    }
+                }
+                
+                if (!setId) {
+                    console.warn('Cannot extract question_set_id from filename');
+                    updateNavigationButtons();
+                    return;
+                }
+                
+                console.log('Loading question set with ID:', setId);
+                
+                const response = await fetch(`api/get_questions_by_set.php?set_id=${encodeURIComponent(setId)}`);
+                
+                if (!response.ok) {
+                    console.error(`Failed to load question set: HTTP ${response.status}`);
+                    updateNavigationButtons();
+                    return;
+                }
+                
+                const result = await response.json();
+                console.log('Question set result:', result);
+                
+                if (result.success && result.questions && Array.isArray(result.questions)) {
+                    allQuestionsInSet = result.questions;
+                    questionSetId = setId;
+                    
+                    // 현재 문제의 인덱스 찾기
+                    currentQuestionIndex = allQuestionsInSet.findIndex(q => 
+                        q.id == questionId || q.id === parseInt(questionId)
+                    );
+                    
+                    console.log('Current question index:', currentQuestionIndex);
+                    console.log('Total questions in set:', allQuestionsInSet.length);
+                } else {
+                    console.error('Invalid question set data received');
+                }
+                
+                updateNavigationButtons();
+                
+            } catch (error) {
+                console.error('Load question set error:', error);
+                updateNavigationButtons();
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('questionCounter');
+            
+            if (!prevBtn || !nextBtn || !counter) {
+                console.error('Navigation elements not found');
+                return;
+            }
+            
+            if (allQuestionsInSet.length > 0 && currentQuestionIndex >= 0) {
+                // 카운터 업데이트
+                counter.textContent = `문제 ${currentQuestionIndex + 1} / ${allQuestionsInSet.length}`;
+                
+                // 이전 버튼
+                prevBtn.disabled = currentQuestionIndex <= 0;
+                
+                // 다음 버튼
+                nextBtn.disabled = currentQuestionIndex >= allQuestionsInSet.length - 1;
+            } else {
+                // 기본값 설정
+                counter.textContent = '문제 1 / 1';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+            }
+        }
+
+        function goToPreviousQuestion() {
+            if (currentQuestionIndex > 0 && allQuestionsInSet.length > 0) {
+                const prevQuestion = allQuestionsInSet[currentQuestionIndex - 1];
+                if (prevQuestion && prevQuestion.id) {
+                    window.location.href = `question_detail.html?id=${prevQuestion.id}`;
+                }
+            }
+        }
+
+        function goToNextQuestion() {
+            if (currentQuestionIndex < allQuestionsInSet.length - 1 && allQuestionsInSet.length > 0) {
+                const nextQuestion = allQuestionsInSet[currentQuestionIndex + 1];
+                if (nextQuestion && nextQuestion.id) {
+                    window.location.href = `question_detail.html?id=${nextQuestion.id}`;
+                }
             }
         }
 
@@ -670,10 +994,6 @@
                 <div>❌</div>
                 <div>${message}</div>
             `;
-        }
-
-        function printQuestion() {
-            window.print();
         }
 
         async function downloadQuestion() {
