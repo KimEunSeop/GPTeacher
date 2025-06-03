@@ -36,6 +36,14 @@
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '🎓';
+            font-size: 1.8rem;
         }
 
         .user-menu {
@@ -111,41 +119,193 @@
         }
 
         .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 40px;
+            border: 2px dashed #e1e8f0;
+            border-radius: 20px;
+            padding: 60px 40px;
             text-align: center;
-            background: #f8f9ff;
+            background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .upload-area:hover {
-            border-color: #764ba2;
-            background: #f0f2ff;
+            border-color: rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.08);
+        }
+
+        .upload-area:hover::before {
+            opacity: 0.15;
         }
 
         .upload-area.dragover {
-            border-color: #764ba2;
-            background: #e8ebff;
-            transform: scale(1.02);
+            border-color: rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
+            transform: scale(1.01);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.12);
+        }
+
+        .upload-area.dragover::before {
+            opacity: 0.2;
+            animation: borderGlow 2s infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 0.25; }
         }
 
         .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 24px;
             color: #667eea;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-area:hover .upload-icon {
+            transform: translateY(-2px) scale(1.05);
+            filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.15));
         }
 
         .upload-text {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .upload-hint {
+            font-size: 1rem;
+            color: #718096;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .upload-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .upload-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+        }
+
+        .upload-button:hover::before {
+            left: 100%;
+        }
+
+        .upload-button:active {
+            transform: translateY(0);
+        }
+
+        .file-selected {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            position: relative;
+        }
+
+        .file-selected::before {
+            opacity: 0;
+        }
+
+        .file-selected .upload-icon {
+            color: #28a745;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .file-selected .upload-text {
+            color: #155724;
+            background: linear-gradient(135deg, #155724, #28a745);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .file-info {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 16px 24px;
+            margin-top: 20px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
             font-size: 0.9rem;
-            color: #999;
+            color: #718096;
         }
 
         #fileInput {
@@ -250,6 +410,12 @@
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             height: fit-content;
+        }
+
+        .questions-sidebar .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .questions-list {
@@ -437,7 +603,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">📚 AI Teacher</div>
+            <div class="logo">AI Teacher</div>
             <div class="user-menu">
                 <div class="nav-links">
                     <a href="dashboard.html" class="nav-link">대시보드</a>
@@ -466,22 +632,26 @@
 
         <div class="main-content">
             <div class="upload-section">
-                <h2 class="section-title">📄 PDF 업로드</h2>
+                <h2 class="section-title">PDF 업로드</h2>
                 
                 <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
-                    <div class="upload-text">PDF 파일을 드래그하거나 클릭하여 업로드</div>
-                    <div class="upload-hint">최대 10MB, PDF 파일만 지원</div>
-                    <button class="btn" onclick="selectFile()">
-                        파일 선택
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">파일을 끌어다 놓거나 클릭하여 업로드</div>
+                    <div class="upload-hint">PDF 파일만 지원 (최대 10MB)</div>
+                    <button class="upload-button" onclick="selectFile()">
+                        파일 선택하기
                     </button>
+                    <div class="file-info" id="fileInfo">
+                        <div class="file-name" id="fileName"></div>
+                        <div class="file-size" id="fileSize"></div>
+                    </div>
                 </div>
                 
                 <input type="file" id="fileInput" accept=".pdf" />
 
                 <!-- 문제 생성 옵션 -->
                 <div class="question-options" id="questionOptions">
-                    <h3 style="margin-bottom: 20px; color: #333;">📝 문제 생성 설정</h3>
+                    <h3 style="margin-bottom: 20px; color: #333;">문제 생성 설정</h3>
                     
                     <div class="option-group">
                         <label class="option-label">문제 개수: <span id="questionCountValue">5</span>개</label>
@@ -522,7 +692,7 @@
             </div>
 
             <div class="questions-sidebar">
-                <h2 class="section-title">📚 내 문제집 목록</h2>
+                <h2 class="section-title">내 문제집 목록</h2>
                 
                 <div class="questions-list" id="questionsList">
                     <div class="loading">
@@ -542,10 +712,10 @@
             <p class="modal-message" id="modalMessage"></p>
             <div class="modal-buttons">
                 <button class="btn btn-primary" id="viewQuestionsBtn">
-                    📝 생성된 문제 보기
+                    생성된 문제 보기
                 </button>
                 <button class="btn btn-secondary" onclick="closeModal()">
-                    ✨ 새 문제 만들기
+                    새 문제 만들기
                 </button>
             </div>
         </div>
@@ -557,21 +727,15 @@
 
         // 페이지 로드시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📚 대시보드 로드됨');
+            console.log('🎓 대시보드 로드됨');
             
-            // 기본 설정
-            // document.getElementById('userInfo').textContent = 'test@example.com';
             checkAuth();
             setupUpload();
             setupSlider();
             loadQuestionSets();
         });
 
-        // 파일 선택
-        function selectFile() {
-            document.getElementById('fileInput').click();
-        }
-
+        // 인증 확인 및 사용자 정보 표시
         async function checkAuth() {
             try {
                 const response = await fetch('api/check_login.php');
@@ -588,6 +752,11 @@
                 console.error('Auth check error:', error);
                 window.location.href = 'login.html';
             }
+        }
+
+        // 파일 선택
+        function selectFile() {
+            document.getElementById('fileInput').click();
         }
 
         // 업로드 설정
@@ -642,12 +811,21 @@
             
             // 업로드 영역 업데이트
             const uploadArea = document.getElementById('uploadArea');
-            uploadArea.innerHTML = `
-                <div class="upload-icon">✅</div>
-                <div class="upload-text">선택된 파일: ${file.name}</div>
-                <div class="upload-hint">아래에서 문제 생성 옵션을 설정하세요</div>
-                <button class="btn" onclick="resetFile()">다른 파일 선택</button>
-            `;
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            
+            uploadArea.classList.add('file-selected');
+            uploadArea.querySelector('.upload-icon').textContent = '📄';
+            uploadArea.querySelector('.upload-text').textContent = '파일이 선택되었습니다';
+            uploadArea.querySelector('.upload-hint').textContent = '아래에서 문제 생성 옵션을 설정하세요';
+            uploadArea.querySelector('.upload-button').textContent = '다른 파일 선택';
+            uploadArea.querySelector('.upload-button').onclick = resetFile;
+            
+            // 파일 정보 표시
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.classList.add('show');
             
             // 옵션 표시
             document.getElementById('questionOptions').style.display = 'block';
@@ -660,14 +838,27 @@
             document.getElementById('questionOptions').style.display = 'none';
             
             const uploadArea = document.getElementById('uploadArea');
-            uploadArea.innerHTML = `
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">PDF 파일을 드래그하거나 클릭하여 업로드</div>
-                <div class="upload-hint">최대 10MB, PDF 파일만 지원</div>
-                <button class="btn" onclick="selectFile()">파일 선택</button>
-            `;
+            const fileInfo = document.getElementById('fileInfo');
+            
+            uploadArea.classList.remove('file-selected');
+            uploadArea.querySelector('.upload-icon').textContent = '📄';
+            uploadArea.querySelector('.upload-text').textContent = '파일을 끌어다 놓거나 클릭하여 업로드';
+            uploadArea.querySelector('.upload-hint').textContent = 'PDF 파일만 지원 (최대 10MB)';
+            uploadArea.querySelector('.upload-button').textContent = '파일 선택하기';
+            uploadArea.querySelector('.upload-button').onclick = selectFile;
+            
+            fileInfo.classList.remove('show');
             
             setupUpload(); // 이벤트 다시 설정
+        }
+
+        // 파일 크기 포맷팅
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
         // 슬라이더 설정
@@ -771,7 +962,6 @@
             loadQuestionSets();
         }
 
-
         // 문제집 목록 로드
         async function loadQuestionSets() {
             try {
@@ -793,7 +983,7 @@
                 } else {
                     questionsList.innerHTML = `
                         <div class="empty-state">
-                            <div class="empty-icon">📚</div>
+                            <div class="empty-icon">📋</div>
                             <div>아직 생성된 문제집이 없습니다.<br>PDF를 업로드해서 첫 문제집을 만들어보세요!</div>
                         </div>
                     `;
@@ -802,7 +992,7 @@
                 console.error('문제집 로딩 오류:', error);
                 document.getElementById('questionsList').innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-icon">❌</div>
+                        <div class="empty-icon">⚠️</div>
                         <div>문제집 목록을 불러올 수 없습니다.</div>
                     </div>
                 `;
