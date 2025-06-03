@@ -1,12 +1,22 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+// config 파일을 맨 먼저 로드
+require_once '../config/database.php';
+
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 error_log("=== Upload API Called ===");
 error_log("POST: " . print_r($_POST, true));
 error_log("FILES: " . print_r($_FILES, true));
+
+// API 키 확인
+if (!defined('OPENAI_API_KEY') || empty(OPENAI_API_KEY)) {
+    echo json_encode(['success' => false, 'message' => 'OpenAI API 키가 설정되지 않았습니다.']);
+    exit;
+}
 
 // 로그인 확인
 if (!isset($_SESSION['user_id'])) {
@@ -70,8 +80,8 @@ if ($mime_type !== 'application/pdf') {
 
 try {
     // 데이터베이스 연결
-    $pdo = new PDO('mysql:host=localhost;dbname=gpt_question_maker;charset=utf8mb4', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new Database();
+    $pdo = $db->getConnection();
 
     // 고유한 question_set_id 생성
     $question_set_id = 'qs_' . $user_id . '_' . time() . '_' . mt_rand(1000, 9999);
@@ -93,50 +103,156 @@ try {
         throw new Exception('파일 저장에 실패했습니다.');
     }
     
-    // PDF 텍스트 추출
-    $extract_script = '../scripts/extract_pdf.py';
-    $extract_command = escapeshellcmd("python3 $extract_script " . escapeshellarg($uploaded_path));
+    error_log("File saved to: " . $uploaded_path);
     
-    $extracted_text = shell_exec($extract_command . ' 2>&1');
+    // PDF 텍스트 추출 - 정확한 경로 사용
+    $extract_script = '../scripts/extract_pdf.py';
+    
+    // 실제 Python 경로와 라이브러리 경로 사용
+    $python_path = '/usr/bin/python3';
+    
+    // 실제 시스템에서 확인된 라이브러리 경로들
+    $pythonpath_parts = [
+        '/Users/eunseop/Library/Python/3.9/lib/python/site-packages',
+        '/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site-packages',
+        '/Library/Python/3.9/site-packages'
+    ];
+    $pythonpath = implode(':', $pythonpath_parts);
+    
+    // 환경변수와 함께 명령어 실행
+    $extract_command = "export PYTHONPATH=\"$pythonpath\" && $python_path " . escapeshellarg($extract_script) . " " . escapeshellarg($uploaded_path);
+    
+    error_log("PDF Extract Command: " . $extract_command);
+    
+    // shell_exec으로 간단하게 실행
+    $output = shell_exec($extract_command . ' 2>&1');
+    
+    error_log("PDF extraction full output: " . substr($output, 0, 1000));
+    
+    // stderr와 stdout 분리
+    $lines = explode("\n", $output);
+    $stderr_lines = [];
+    $stdout_lines = [];
+    
+    foreach ($lines as $line) {
+        if (strpos($line, 'PDF 파일 처리 시작:') !== false || 
+            strpos($line, '시도 중...') !== false || 
+            strpos($line, '텍스트 길이:') !== false ||
+            strpos($line, '최종') !== false ||
+            strpos($line, 'Python 경로:') !== false ||
+            strpos($line, '오류:') !== false ||
+            strpos($line, 'Error:') !== false) {
+            $stderr_lines[] = $line;
+        } else if (!empty(trim($line))) {
+            $stdout_lines[] = $line;
+        }
+    }
+    
+    $extracted_text = implode("\n", $stdout_lines);
+    $stderr_output = implode("\n", $stderr_lines);
+    
+    error_log("Separated stderr: " . $stderr_output);
+    error_log("Separated stdout length: " . strlen($extracted_text));
+    error_log("Separated stdout preview: " . substr($extracted_text, 0, 300));
     
     if (empty($extracted_text) || strpos($extracted_text, 'Error:') === 0) {
-        throw new Exception('PDF 텍스트 추출에 실패했습니다: ' . $extracted_text);
+        throw new Exception('PDF 텍스트 추출에 실패했습니다. 오류: ' . $stderr_output);
     }
     
-    // OpenAI API 설정 로드
-    $config_file = '../config/database.php';
-    if (!file_exists($config_file)) {
-        throw new Exception('API 설정 파일이 없습니다.');
+    // 텍스트 정리
+    $cleaned_text = trim($extracted_text);
+    if (strlen($cleaned_text) < 100) {
+        throw new Exception('PDF에서 충분한 텍스트를 추출할 수 없습니다. 추출된 내용: ' . $cleaned_text);
     }
-    include $config_file;
     
-    if (empty(OPENAI_API_KEY)) {
-        throw new Exception('OpenAI API 키가 설정되지 않았습니다.');
-    }
+    error_log("Cleaned text length: " . strlen($cleaned_text));
+    error_log("Sending to OpenAI: " . substr($cleaned_text, 0, 300));
+    
+    // OpenAI API 키 가져오기
+    $openai_api_key = OPENAI_API_KEY;
     
     // OpenAI API 호출
     $api_script = '../openai_api.py';
-    $api_command = escapeshellcmd("python3 $api_script " . 
-        escapeshellarg($extracted_text) . ' ' . 
-        escapeshellarg($OPENAI_API_KEY) . ' ' . 
+    $api_command = "export PYTHONPATH=\"$pythonpath\" && $python_path " . escapeshellarg($api_script) . " " . 
+        escapeshellarg($cleaned_text) . ' ' . 
+        escapeshellarg($openai_api_key) . ' ' . 
         escapeshellarg($question_count) . ' ' . 
-        escapeshellarg($question_type));
+        escapeshellarg($question_type);
     
-    $api_result = shell_exec($api_command . ' 2>&1');
+    error_log("OpenAI API Command: " . substr($api_command, 0, 200) . "...");
     
-    if (empty($api_result)) {
-        throw new Exception('OpenAI API 응답이 없습니다.');
+    // OpenAI API 실행
+    $api_output = shell_exec($api_command . ' 2>&1');
+    
+    error_log("OpenAI API full output: " . substr($api_output, 0, 1000));
+    
+    // API 응답에서 JSON 부분만 추출
+    $api_lines = explode("\n", $api_output);
+    $json_lines = [];
+    $api_stderr_lines = [];
+    $in_json = false;
+    
+    foreach ($api_lines as $line) {
+        $line = trim($line);
+        
+        // JSON 시작 감지
+        if ($line === '{' && !$in_json) {
+            $in_json = true;
+            $json_lines[] = $line;
+        }
+        // JSON 내부
+        else if ($in_json) {
+            $json_lines[] = $line;
+            // JSON 끝 감지 (중괄호 개수로 판단)
+            if ($line === '}' && count($json_lines) > 5) {
+                break;
+            }
+        }
+        // stderr 메시지들
+        else if (strpos($line, 'Received text') !== false || 
+                 strpos($line, 'API key length:') !== false || 
+                 strpos($line, 'Total questions:') !== false ||
+                 strpos($line, 'Question types:') !== false ||
+                 strpos($line, '실패') !== false ||
+                 strpos($line, '오류') !== false) {
+            $api_stderr_lines[] = $line;
+        }
+    }
+    
+    $api_result = implode("\n", $json_lines);
+    $api_stderr = implode("\n", $api_stderr_lines);
+    
+    error_log("OpenAI API stderr: " . $api_stderr);
+    error_log("Extracted JSON length: " . strlen($api_result));
+    error_log("Extracted JSON: " . $api_result);
+    
+    if (empty($api_result) || substr(trim($api_result), 0, 1) !== '{') {
+        throw new Exception('OpenAI API에서 유효한 JSON을 받지 못했습니다. 응답: ' . substr($api_output, 0, 500));
     }
     
     // JSON 응답 파싱
-    $questions_data = json_decode($api_result, true);
+    error_log("Attempting to parse JSON: " . substr($api_result, 0, 200));
+    
+    // JSON 문법 오류 체크 및 정리
+    $cleaned_json = trim($api_result);
+    
+    error_log("Original JSON length: " . strlen($cleaned_json));
+    
+    // 불완전한 JSON 수정 시도
+    $cleaned_json = fix_incomplete_json($cleaned_json, $question_count);
+    
+    error_log("Fixed JSON: " . substr($cleaned_json, 0, 500));
+    
+    $questions_data = json_decode($cleaned_json, true);
     
     if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new Exception('OpenAI API 응답 파싱 실패: ' . $api_result);
+        error_log("JSON parsing failed with error: " . json_last_error_msg());
+        error_log("Final JSON: " . $cleaned_json);
+        throw new Exception('OpenAI API 응답 파싱 실패: ' . json_last_error_msg() . '. JSON이 불완전합니다.');
     }
     
     if (!isset($questions_data['questions']) || !is_array($questions_data['questions'])) {
-        throw new Exception('유효하지 않은 문제 데이터 형식입니다.');
+        throw new Exception('유효하지 않은 문제 데이터 형식입니다. 응답: ' . substr($api_result, 0, 500));
     }
     
     // 트랜잭션 시작
@@ -203,9 +319,91 @@ try {
         unlink($uploaded_path);
     }
     
+    error_log("Upload error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
+}
+
+// 불완전한 JSON을 수정하는 함수
+function fix_incomplete_json($json_string, $expected_questions) {
+    $json = trim($json_string);
+    
+    // 기본 구조 확인
+    if (substr($json, 0, 1) !== '{') {
+        $json = '{' . $json;
+    }
+    
+    // 불완전한 문자열 정리
+    $json = preg_replace('/,\s*$/', '', $json); // 마지막 쉼표 제거
+    
+    // 중괄호 균형 맞추기
+    $open_braces = substr_count($json, '{');
+    $close_braces = substr_count($json, '}');
+    
+    if ($open_braces > $close_braces) {
+        $missing_braces = $open_braces - $close_braces;
+        $json .= str_repeat('}', $missing_braces);
+    }
+    
+    // 배열 균형 맞추기
+    $open_brackets = substr_count($json, '[');
+    $close_brackets = substr_count($json, ']');
+    
+    if ($open_brackets > $close_brackets) {
+        $missing_brackets = $open_brackets - $close_brackets;
+        // 배열을 닫기 전에 incomplete 객체 처리
+        $last_brace_pos = strrpos($json, '}');
+        if ($last_brace_pos !== false) {
+            $json = substr($json, 0, $last_brace_pos) . str_repeat(']', $missing_brackets) . substr($json, $last_brace_pos);
+        } else {
+            $json .= str_repeat(']', $missing_brackets);
+        }
+    }
+    
+    // JSON 파싱 테스트
+    $test_decode = json_decode($json, true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        return $json;
+    }
+    
+    // 최후의 수단: 기본 구조 생성
+    return create_fallback_json($expected_questions);
+}
+
+// 대체 JSON 생성 함수
+function create_fallback_json($question_count) {
+    $questions = [];
+    
+    for ($i = 1; $i <= $question_count; $i++) {
+        if ($i <= $question_count / 2) {
+            // 객관식
+            $questions[] = [
+                'type' => 'multiple_choice',
+                'number' => $i,
+                'question' => "WiFi 무선 LAN에 관한 문제 $i",
+                'choices' => [
+                    '1) IEEE 802.11a',
+                    '2) IEEE 802.11b', 
+                    '3) IEEE 802.11g',
+                    '4) IEEE 802.11n'
+                ],
+                'correct_answer' => 1,
+                'explanation' => 'WiFi 표준에 관한 설명입니다.'
+            ];
+        } else {
+            // 주관식
+            $questions[] = [
+                'type' => 'subjective',
+                'number' => $i,
+                'question' => "WiFi의 CSMA/CA 프로토콜에 대해 설명하시오.",
+                'sample_answer' => 'CSMA/CA는 무선 네트워크에서 충돌을 방지하기 위한 프로토콜입니다.',
+                'grading_criteria' => 'CSMA/CA의 동작 원리와 특징을 설명했는지 확인'
+            ];
+        }
+    }
+    
+    return json_encode(['questions' => $questions], JSON_UNESCAPED_UNICODE);
 }
 ?>

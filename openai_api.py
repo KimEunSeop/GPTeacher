@@ -148,7 +148,7 @@ def call_openai_api(text, api_key, total_questions=5, question_types='both'):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python3 openai_api.py <text> <api_key> [total_questions] [question_types]")
+        print("Usage: python3 openai_api.py <text> <api_key> [total_questions] [question_types]", file=sys.stderr)
         sys.exit(1)
     
     text = sys.argv[1].strip()
@@ -156,15 +156,17 @@ if __name__ == "__main__":
     total_questions = int(sys.argv[3]) if len(sys.argv) > 3 else 5
     question_types = sys.argv[4] if len(sys.argv) > 4 else 'both'
     
-    # 디버깅 출력
-    print(f"Text length: {len(text)}", file=sys.stderr)
+    # 받은 텍스트 내용 확인 (디버깅)
+    print(f"Received text length: {len(text)}", file=sys.stderr)
+    print(f"Received text preview: {text[:200]}...", file=sys.stderr)
     print(f"API key length: {len(api_key)}", file=sys.stderr)
     print(f"Total questions: {total_questions}", file=sys.stderr)
     print(f"Question types: {question_types}", file=sys.stderr)
     
     result = call_openai_api(text, api_key, total_questions, question_types)
     if result:
+        # JSON 응답만 stdout으로 출력
         print(result)
     else:
+        print("Error: API call failed", file=sys.stderr)
         sys.exit(1)
-        

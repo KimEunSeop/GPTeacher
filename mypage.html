@@ -276,7 +276,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="logo">📚 AI Teacher</div>
             <div class="user-menu">
                 <div class="nav-links">
                     <a href="dashboard.html" class="nav-link">대시보드</a>
@@ -377,6 +377,7 @@
             loadRecentActivity();
         });
 
+        // 인증 확인
         async function checkAuth() {
             try {
                 const response = await fetch('api/check_login.php');
@@ -388,6 +389,11 @@
                 }
                 
                 currentUser = result.user;
+                // 헤더의 사용자 정보도 업데이트
+                const userInfoElement = document.getElementById('userInfo');
+                if (userInfoElement) {
+                    userInfoElement.textContent = result.user.email;
+                }
             } catch (error) {
                 console.error('Auth check error:', error);
                 window.location.href = 'login.html';

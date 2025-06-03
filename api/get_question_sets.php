@@ -34,6 +34,18 @@ try {
     $stmt->execute([$user_id]);
     $question_sets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // 각 문제집의 표시 제목 개선
+    foreach ($question_sets as &$set) {
+        // PDF 파일명에서 확장자 제거하고 question_set_id 부분 제거
+        $display_title = $set['title'];
+        if (empty($display_title) || $display_title === $set['pdf_filename']) {
+            $clean_filename = preg_replace('/^qs_\d+_\d+_\d+_/', '', $set['pdf_filename']);
+            $clean_filename = preg_replace('/\.pdf$/i', '', $clean_filename);
+            $display_title = $clean_filename;
+        }
+        $set['display_title'] = $display_title;
+    }
+
     echo json_encode([
         'success' => true,
         'question_sets' => $question_sets

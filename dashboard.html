@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대시보드 - GPT 문제 메이커</title>
+    <title>대시보드 - AI Teacher</title>
     <style>
         * {
             margin: 0;
@@ -437,7 +437,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="logo">📚 AI Teacher</div>
             <div class="user-menu">
                 <div class="nav-links">
                     <a href="dashboard.html" class="nav-link">대시보드</a>
@@ -511,7 +511,7 @@
                     </div>
 
                     <button class="btn btn-generate" onclick="startGeneration()">
-                        🚀 문제 생성 시작
+                        문제 생성 시작
                     </button>
                 </div>
                 
@@ -560,8 +560,8 @@
             console.log('📚 대시보드 로드됨');
             
             // 기본 설정
-            document.getElementById('userInfo').textContent = 'test@example.com';
-            
+            // document.getElementById('userInfo').textContent = 'test@example.com';
+            checkAuth();
             setupUpload();
             setupSlider();
             loadQuestionSets();
@@ -570,6 +570,24 @@
         // 파일 선택
         function selectFile() {
             document.getElementById('fileInput').click();
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('api/check_login.php');
+                const result = await response.json();
+                
+                if (!result.logged_in) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // 사용자 정보 표시
+                document.getElementById('userInfo').textContent = result.user.email;
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = 'login.html';
+            }
         }
 
         // 업로드 설정
@@ -753,6 +771,7 @@
             loadQuestionSets();
         }
 
+
         // 문제집 목록 로드
         async function loadQuestionSets() {
             try {
@@ -764,7 +783,7 @@
                 if (result.success && result.question_sets && result.question_sets.length > 0) {
                     questionsList.innerHTML = result.question_sets.map(set => `
                         <div class="question-set-item" onclick="openQuestionSet('${set.question_set_id}')">
-                            <div class="question-set-title">${set.pdf_filename}</div>
+                            <div class="question-set-title">${set.display_title || set.title}</div>
                             <div class="question-set-info">
                                 <span>${set.total_questions}개 문제</span>
                                 <span>${new Date(set.created_at).toLocaleDateString('ko-KR')}</span>
