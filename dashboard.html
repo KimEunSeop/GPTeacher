@@ -15,6 +15,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f7fa;
             color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -78,6 +81,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 30px 20px;
+            flex: 1;
         }
 
         .welcome-section {
@@ -103,6 +107,7 @@
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 30px;
+            margin-bottom: 40px;
         }
 
         .upload-section {
@@ -574,6 +579,17 @@
             padding: 15px 30px;
         }
 
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px 30px;
+            background: #f5f7fa;
+            margin-top: auto;
+            border-top: 1px solid #e0e5f0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -720,6 +736,10 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 31253) 충청남도 천안시 동남구 병천면 충절로 1600 (가전리, 한국기술교육대학교) Tel. 010-3658-7761 | Copyrightⓒ2025 AI Teacher. All rights reserved.</p>
+    </footer>
 
     <script>
         let selectedFile = null;

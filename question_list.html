@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문제 목록 - GPT 문제 메이커</title>
+    <title>문제 목록 - AI Teacher</title>
     <style>
         * {
             margin: 0;
@@ -36,6 +36,14 @@
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '🎓';
+            font-size: 1.8rem;
         }
 
         .user-menu {
@@ -137,6 +145,7 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
+            margin-bottom: 40px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
@@ -305,6 +314,16 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 30px 20px;
+            background: white;
+            margin-top: 40px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -340,7 +359,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">📚 GPT 문제 메이커</div>
+            <div class="logo">AI Teacher</div>
             <div class="user-menu">
                 <div class="nav-links">
                     <a href="dashboard.html" class="nav-link">대시보드</a>
@@ -387,6 +406,10 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 31253) 충청남도 천안시 동남구 병천면 충절로 1600 (가전리, 한국기술교육대학교) Tel. 010-3658-7761 | Copyrightⓒ2025 AI Teacher. All rights reserved.</p>
+    </footer>
 
     <script>
         let currentUser = null;

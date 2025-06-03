@@ -16,9 +16,11 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 20px 20px 80px;
+            position: relative;
         }
 
         .login-container {
@@ -159,9 +161,37 @@
             100% { transform: rotate(360deg); }
         }
 
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 15px 20px;
+            font-size: 0.75rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
+            }
+            
+            footer {
+                position: static;
+                background: rgba(255, 255, 255, 0.05);
+                margin-top: 30px;
+                padding: 15px;
+                font-size: 0.7rem;
+            }
+            
+            body {
+                justify-content: flex-start;
+                padding-top: 40px;
+                padding-bottom: 20px;
             }
         }
     </style>
@@ -214,6 +244,10 @@
             계정이 없으신가요? <a href="register.html">회원가입</a>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 31253) 충청남도 천안시 동남구 병천면 충절로 1600 (가전리, 한국기술교육대학교) Tel. 010-3658-7761 | Copyrightⓒ2025 AI Teacher. All rights reserved.</p>
+    </footer>
 
     <script>
         const form = document.getElementById('loginForm');
