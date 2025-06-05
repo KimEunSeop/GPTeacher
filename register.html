@@ -3,412 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문제 목록 - AI Teacher</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo::before {
-            content: '🎓';
-            font-size: 1.8rem;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .user-info {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: background 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            flex: 1;
-        }
-
-        .breadcrumb {
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-
-        .breadcrumb a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .question-set-header {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .question-set-title {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .question-set-info {
-            color: #666;
-            font-size: 1rem;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .question-set-stats {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .stat-item {
-            background: #f8f9ff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #e0e5ff;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .questions-container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .questions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .questions-title {
-            font-size: 1.3rem;
-            color: #333;
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid #e0e0e0;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .questions-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .question-item {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: white;
-        }
-
-        .question-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .question-number {
-            background: #667eea;
-            color: white;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .question-type-badge {
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-
-        .badge-multiple {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .badge-subjective {
-            background: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .question-content {
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .question-preview {
-            color: #666;
-            font-size: 0.9rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .empty-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .empty-desc {
-            font-size: 1rem;
-        }
-
-        .back-button {
-            background: #f8f9fa;
-            color: #333;
-            border: 1px solid #e0e0e0;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-
-        .back-button:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        footer {
-            text-align: center;
-            color: #666;
-            padding: 40px 20px 30px;
-            background: #f5f7fa;
-            margin-top: auto;
-            border-top: 1px solid #e0e5f0;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .questions-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: stretch;
-            }
-
-            .filter-buttons {
-                justify-content: center;
-            }
-
-            .question-set-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .question-set-stats {
-                justify-content: center;
-            }
-        }
-    </style>
+    <title>회원가입 - AI Teacher</title>
+    <link rel="stylesheet" href="css/register.css">
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">AI Teacher</div>
-            <div class="user-menu">
-                <div class="nav-links">
-                    <a href="dashboard.html" class="nav-link">대시보드</a>
-                    <a href="mypage.html" class="nav-link">마이페이지</a>
-                    <a href="logout.php" class="nav-link">로그아웃</a>
-                </div>
-                <div class="user-info" id="userInfo">
-                    로딩 중...
-                </div>
+    <a href="index.html" class="back-link">← 홈으로</a>
+    
+    <div class="register-container">
+        <div class="logo">🎓</div>
+        <h1 class="title">회원가입</h1>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="email" class="form-label">이메일</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="example@email.com"
+                    required
+                >
+                <div class="error-message" id="emailError"></div>
             </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="dashboard.html">← 대시보드로 돌아가기</a>
-        </div>
-
-        <div class="question-set-header">
-            <h1 class="question-set-title" id="questionSetTitle">문제집 로딩 중...</h1>
-            <div class="question-set-info" id="questionSetInfo">
-                <span>로딩 중...</span>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">비밀번호</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="비밀번호를 입력하세요 (최소 6자)"
+                    required
+                >
+                <div class="error-message" id="passwordError"></div>
             </div>
-            <div class="question-set-stats" id="questionSetStats">
-                <!-- 통계 정보가 여기에 표시됩니다 -->
+            
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    class="form-input" 
+                    placeholder="비밀번호를 다시 입력하세요"
+                    required
+                >
+                <div class="error-message" id="confirmPasswordError"></div>
             </div>
-        </div>
-
-        <div class="questions-container">
-            <div class="questions-header">
-                <h2 class="questions-title">📝 문제 목록</h2>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">전체</button>
-                    <button class="filter-btn" data-filter="multiple_choice">객관식</button>
-                    <button class="filter-btn" data-filter="subjective">주관식</button>
-                </div>
+            
+            <button type="submit" class="btn" id="submitBtn">
+                회원가입
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                회원가입 중...
             </div>
-
-            <div class="questions-list" id="questionsList">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <div>문제 목록을 불러오는 중...</div>
-                </div>
-            </div>
+        </form>
+        
+        <div class="login-link">
+            이미 계정이 있으신가요? <a href="login.html">로그인</a>
         </div>
     </div>
 
@@ -416,185 +72,6 @@
         <p>&copy; 31253) 충청남도 천안시 동남구 병천면 충절로 1600 (가전리, 한국기술교육대학교) Tel. 010-3658-7761 | Copyrightⓒ2025 AI Teacher. All rights reserved.</p>
     </footer>
 
-    <script>
-        let currentUser = null;
-        let currentQuestionSetId = null;
-        let allQuestions = [];
-
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            // URL에서 question_set_id 추출
-            const urlParams = new URLSearchParams(window.location.search);
-            currentQuestionSetId = urlParams.get('set_id');
-            
-            if (!currentQuestionSetId) {
-                alert('유효하지 않은 문제집입니다.');
-                window.location.href = 'dashboard.html';
-                return;
-            }
-
-            checkAuth();
-            loadQuestionSet();
-            setupFilters();
-        });
-
-        // 인증 확인
-        async function checkAuth() {
-            try {
-                const response = await fetch('api/check_login.php');
-                const result = await response.json();
-                
-                if (!result.logged_in) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                currentUser = result.user;
-                document.getElementById('userInfo').textContent = result.user.email;
-            } catch (error) {
-                console.error('Auth check error:', error);
-                window.location.href = 'login.html';
-            }
-        }
-
-        // 문제집 정보 및 문제 목록 로드
-        async function loadQuestionSet() {
-            try {
-                const response = await fetch(`api/get_questions_by_set.php?set_id=${encodeURIComponent(currentQuestionSetId)}`);
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.message || '문제집을 불러올 수 없습니다.');
-                }
-
-                // 문제집 정보 표시
-                displayQuestionSetInfo(result.question_set_info);
-                
-                // 문제 목록 저장 및 표시
-                allQuestions = result.questions;
-                displayQuestions(allQuestions);
-
-            } catch (error) {
-                console.error('Load question set error:', error);
-                document.getElementById('questionsList').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">❌</div>
-                        <div class="empty-title">오류 발생</div>
-                        <div class="empty-desc">${error.message}</div>
-                    </div>
-                `;
-            }
-        }
-
-        // 문제집 정보 표시
-        function displayQuestionSetInfo(info) {
-            document.getElementById('questionSetTitle').textContent = info.title || info.pdf_filename;
-            
-            const questionSetInfo = document.getElementById('questionSetInfo');
-            questionSetInfo.innerHTML = `
-                <span>📄 ${info.pdf_filename}</span>
-                <span>📅 ${new Date(info.created_at).toLocaleDateString('ko-KR')}</span>
-            `;
-
-            const questionSetStats = document.getElementById('questionSetStats');
-            questionSetStats.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-number">${info.total_questions}</div>
-                    <div class="stat-label">총 문제</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${info.multiple_choice_count}</div>
-                    <div class="stat-label">객관식</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${info.subjective_count}</div>
-                    <div class="stat-label">주관식</div>
-                </div>
-            `;
-        }
-
-        // 문제 목록 표시
-        function displayQuestions(questions) {
-            const questionsList = document.getElementById('questionsList');
-            
-            if (!questions || questions.length === 0) {
-                questionsList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📝</div>
-                        <div class="empty-title">문제가 없습니다</div>
-                        <div class="empty-desc">이 문제집에는 아직 문제가 없습니다.</div>
-                    </div>
-                `;
-                return;
-            }
-
-            questionsList.innerHTML = '';
-            
-            questions.forEach((question) => {
-                const questionItem = document.createElement('div');
-                questionItem.className = 'question-item';
-                questionItem.dataset.type = question.question_type;
-                
-                const typeLabel = question.question_type === 'multiple_choice' ? '객관식' : '주관식';
-                const typeBadgeClass = question.question_type === 'multiple_choice' ? 'badge-multiple' : 'badge-subjective';
-                
-                // 문제 미리보기 생성
-                let preview = question.question_text;
-                if (question.question_type === 'multiple_choice' && question.choices) {
-                    try {
-                        const choicesData = JSON.parse(question.choices);
-                        if (choicesData.choices && Array.isArray(choicesData.choices)) {
-                            preview += '\n' + choicesData.choices.slice(0, 2).join('\n') + '...';
-                        }
-                    } catch (e) {
-                        // choices 파싱 실패시 그냥 문제 텍스트만 표시
-                    }
-                }
-                
-                questionItem.innerHTML = `
-                    <div class="question-header">
-                        <span class="question-number">${question.question_number}번</span>
-                        <span class="question-type-badge ${typeBadgeClass}">${typeLabel}</span>
-                    </div>
-                    <div class="question-preview">${preview}</div>
-                `;
-                
-                // 클릭시 문제 상세 페이지로 이동
-                questionItem.addEventListener('click', function() {
-                    window.location.href = `question_detail.html?id=${question.id}`;
-                });
-                
-                questionsList.appendChild(questionItem);
-            });
-        }
-
-        // 필터 설정
-        function setupFilters() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // 활성 버튼 변경
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 필터 적용
-                    const filterType = this.dataset.filter;
-                    filterQuestions(filterType);
-                });
-            });
-        }
-
-        // 문제 필터링
-        function filterQuestions(filterType) {
-            let filteredQuestions = allQuestions;
-            
-            if (filterType !== 'all') {
-                filteredQuestions = allQuestions.filter(question => question.question_type === filterType);
-            }
-            
-            displayQuestions(filteredQuestions);
-        }
-    </script>
+    <script src="js/register.js"></script>
 </body>
 </html>

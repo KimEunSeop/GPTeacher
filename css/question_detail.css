@@ -1,0 +1,556 @@
+/* question_detail.css - 문제 상세 페이지 전용 CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo::before {
+    content: '🎓';
+    font-size: 1.8rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    flex: 1;
+}
+
+.question-header {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.question-title {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.question-meta {
+    display: flex;
+    gap: 20px;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #e0e0e0;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #ff4757, #ff3838);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 8px 16px rgba(255, 71, 87, 0.3);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #5a67d8;
+}
+
+/* 문제 네비게이션 스타일 */
+.question-navigation {
+    background: white;
+    border-radius: 15px;
+    padding: 20px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    min-width: 120px;
+}
+
+.nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.nav-btn:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.nav-prev {
+    justify-content: flex-start;
+}
+
+.nav-next {
+    justify-content: flex-end;
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.question-counter {
+    background: #f8f9ff;
+    color: #667eea;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    border: 1px solid #e0e5ff;
+}
+
+/* 탭 콘텐츠 */
+.content-tabs {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    width: 900px;
+    min-width: 900px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-button.active {
+    background: white;
+    color: #667eea;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+.tab-content {
+    padding: 30px;
+    min-height: 400px;
+    overflow-y: auto;
+    width: 900px;
+    max-width: 900px;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.tab-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tab-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.tab-content::-webkit-scrollbar-thumb:hover {
+    background: #5a67d8;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.question-item {
+    background: #f8f9ff;
+    border-left: 4px solid #667eea;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 0 10px 10px 0;
+}
+
+.question-number {
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.answer-item {
+    background: #f0fff4;
+    border-left: 4px solid #2ed573;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 0 10px 10px 0;
+}
+
+.answer-number {
+    font-weight: bold;
+    color: #2ed573;
+    margin-bottom: 10px;
+}
+
+.answer-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* 학습 모드 */
+.study-mode {
+    margin-top: 30px;
+}
+
+.study-question {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.study-question.revealed {
+    border-color: #2ed573;
+}
+
+.reveal-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.reveal-btn:hover {
+    background: #5a67d8;
+}
+
+.revealed-answer {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f0fff4;
+    border-radius: 10px;
+    border-left: 4px solid #2ed573;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.revealed-answer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.revealed-answer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.revealed-answer::-webkit-scrollbar-thumb {
+    background: #2ed573;
+    border-radius: 3px;
+}
+
+.revealed-answer::-webkit-scrollbar-thumb:hover {
+    background: #27c968;
+}
+
+.revealed-answer.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-state {
+    text-align: center;
+    padding: 40px;
+    color: #ff4757;
+}
+
+footer {
+    text-align: center;
+    color: #666;
+    padding: 40px 20px 30px;
+    background: #f5f7fa;
+    margin-top: auto;
+    border-top: 1px solid #e0e5f0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .question-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tab-header {
+        flex-direction: column;
+    }
+
+    .question-navigation {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-btn {
+        min-width: 100px;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+
+    .question-counter {
+        order: -1;
+        align-self: center;
+    }
+
+    /* 모바일에서 탭 컨테이너 크기 조정 */
+    .content-tabs {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0 auto 40px;
+    }
+
+    /* 모바일에서 탭 콘텐츠 크기 조정 */
+    .tab-content {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    /* 모바일에서 문제/정답 박스 크기 조정 */
+    .question-item,
+    .answer-item,
+    .study-question {
+        width: calc(100% - 40px);
+        min-width: calc(100% - 40px);
+        max-width: calc(100% - 40px);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-tabs {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0 10px 30px;
+    }
+
+    .question-item,
+    .answer-item,
+    .study-question {
+        padding: 15px;
+        margin-bottom: 15px;
+        width: calc(100% - 30px);
+        min-width: calc(100% - 30px);
+        max-width: calc(100% - 30px);
+    }
+
+    .tab-content {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .question-text,
+    .answer-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .revealed-answer {
+        max-height: 150px;
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+}
