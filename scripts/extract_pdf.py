@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-"""
-pdftotext를 사용한 PDF 텍스트 추출
-라이브러리 의존성 없음
-"""
 
 import sys
 import os
