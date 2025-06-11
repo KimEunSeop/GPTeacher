@@ -1,4 +1,4 @@
-/* question_detail.css - 문제 상세 페이지 전용 CSS */
+/* question_detail.css - 문제 상세 페이지 전용 CSS  */
 * {
     margin: 0;
     padding: 0;
@@ -121,6 +121,13 @@ body {
     box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
 }
 
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .btn-secondary {
     background: #f8f9fa;
     color: #333;
@@ -138,6 +145,45 @@ body {
 
 .btn-danger:hover {
     box-shadow: 0 8px 16px rgba(255, 71, 87, 0.3);
+}
+
+/* 즐겨찾기 버튼 스타일 */
+.favorite-btn {
+    position: relative;
+    transition: all 0.3s ease;
+    background: #f8f9fa !important;
+    color: #666 !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+.favorite-btn:hover:not(:disabled) {
+    background: #e9ecef !important;
+    color: #333 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.favorite-btn.favorited {
+    background: linear-gradient(45deg, #ffc107, #ff9800) !important;
+    color: white !important;
+    border: none !important;
+    transform: scale(1.05);
+}
+
+.favorite-btn.favorited:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4) !important;
+}
+
+.favorite-btn #favoriteIcon {
+    font-size: 1.1rem;
+    margin-right: 5px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.favorite-btn:hover #favoriteIcon {
+    transform: scale(1.2);
 }
 
 .back-link {
@@ -552,5 +598,10 @@ footer {
         max-height: 150px;
         font-size: 0.9rem;
         padding: 12px;
+    }
+
+    .favorite-btn {
+        font-size: 0.85rem;
+        padding: 8px 16px;
     }
 }

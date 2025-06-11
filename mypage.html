@@ -95,6 +95,23 @@
                     </div>
                 </div>
 
+                <!-- 즐겨찾기 섹션 추가 -->
+                <div class="favorites-section">
+                    <h2 class="section-title">
+                        <span>⭐</span>
+                        즐겨찾기 문제
+                    </h2>
+                    <div id="favoritesList">
+                        <div class="loading-favorites">
+                            <div class="mini-spinner"></div>
+                            <div>즐겨찾기 목록 로딩중...</div>
+                        </div>
+                    </div>
+                    <div class="favorites-actions" id="favoritesActions" style="display: none;">
+                        <a href="favorites.html" class="btn btn-secondary">전체 보기</a>
+                    </div>
+                </div>
+
                 <div class="quick-actions">
                     <a href="dashboard.html" class="btn">새 문제 생성</a>
                     <button class="btn btn-secondary" onclick="downloadData()">데이터 내보내기</button>

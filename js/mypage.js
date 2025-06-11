@@ -1,4 +1,4 @@
-// mypage.js - 마이페이지 전용 JavaScript (수정됨)
+// mypage.js - 마이페이지 전용 JavaScript (즐겨찾기 기능 추가)
 
 let currentUser = null;
 let userStats = null;
@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkAuth();
     loadUserStats();
     loadRecentActivity();
+    loadFavorites(); // 즐겨찾기 로드 추가
 });
 
 // 인증 확인
@@ -121,6 +122,67 @@ async function loadRecentActivity() {
             `;
         }
     }
+}
+
+// 즐겨찾기 목록 로드 함수 추가
+async function loadFavorites() {
+    try {
+        const response = await fetch('api/get_favorites.php?limit=5'); // 최대 5개만 표시
+        const result = await response.json();
+        
+        const favoritesList = document.getElementById('favoritesList');
+        const favoritesActions = document.getElementById('favoritesActions');
+        
+        if (!favoritesList) {
+            console.error('favoritesList element not found');
+            return;
+        }
+        
+        if (result.success && result.favorites && result.favorites.length > 0) {
+            favoritesList.innerHTML = result.favorites.map(favorite => `
+                <div class="favorite-item" onclick="openFavoriteQuestion('${favorite.id}')">
+                    <div class="favorite-icon">⭐</div>
+                    <div class="favorite-content">
+                        <div class="favorite-title">${favorite.title}</div>
+                        <div class="favorite-date">${new Date(favorite.created_at).toLocaleDateString('ko-KR')}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 전체 보기 버튼 표시 (즐겨찾기가 5개 이상이면)
+            if (result.total_count > 5) {
+                favoritesActions.style.display = 'block';
+                const viewAllBtn = favoritesActions.querySelector('a');
+                if (viewAllBtn) {
+                    viewAllBtn.innerHTML = `전체 ${result.total_count}개 보기`;
+                }
+            }
+        } else {
+            favoritesList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⭐</div>
+                    <div style="font-size: 0.9rem; color: #999;">아직 즐겨찾기한 문제가 없습니다.<br>문제 상세 페이지에서 별표를 클릭해보세요!</div>
+                </div>
+            `;
+            favoritesActions.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Load favorites error:', error);
+        const favoritesList = document.getElementById('favoritesList');
+        if (favoritesList) {
+            favoritesList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">❌</div>
+                    <div style="font-size: 0.9rem; color: #999;">즐겨찾기 목록을 불러올 수 없습니다.</div>
+                </div>
+            `;
+        }
+    }
+}
+
+// 즐겨찾기 문제 열기 함수
+function openFavoriteQuestion(questionId) {
+    window.location.href = `question_detail.html?id=${questionId}`;
 }
 
 function drawChart() {

@@ -1,4 +1,4 @@
-/* mypage.css - 마이페이지 전용 CSS */
+/* mypage.css - 마이페이지 전용 CSS  */
 * {
     margin: 0;
     padding: 0;
@@ -211,6 +211,138 @@ body {
     color: #333;
 }
 
+/* 즐겨찾기 섹션 스타일 */
+.favorites-section {
+    margin-bottom: 30px;
+}
+
+.favorite-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 -8px;
+    padding: 12px 8px;
+}
+
+.favorite-item:hover {
+    background: #f8f9ff;
+    border-color: transparent;
+    transform: translateX(5px);
+}
+
+.favorite-item:last-child {
+    border-bottom: none;
+}
+
+.favorite-icon {
+    font-size: 1.2rem;
+    color: #ffc107;
+    flex-shrink: 0;
+}
+
+.favorite-content {
+    flex: 1;
+    min-width: 0; /* 텍스트 오버플로우 방지 */
+}
+
+.favorite-title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.favorite-date {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.favorites-actions {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.loading-favorites {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.mini-spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+/* 즐겨찾기 버튼 스타일 */
+.favorite-btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.favorite-btn:not(.favorited) {
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #e0e0e0;
+}
+
+.favorite-btn.favorited {
+    background: linear-gradient(45deg, #ffc107, #ff9800);
+    color: white;
+    border: none;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.favorite-btn:hover:not(.favorited) {
+    background: #e9ecef;
+    color: #333;
+}
+
+.favorite-btn.favorited:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+}
+
+.favorite-btn .favorite-icon {
+    font-size: 1.1rem;
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+.favorite-btn.favorited .favorite-icon {
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    animation: starGlow 2s ease-in-out infinite alternate;
+}
+
+/* 별 반짝이는 애니메이션 */
+@keyframes starGlow {
+    0% {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        transform: scale(1);
+    }
+    100% {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 193, 7, 0.5);
+        transform: scale(1.1);
+    }
+}
+
 .quick-actions {
     display: flex;
     gap: 15px;
@@ -276,6 +408,11 @@ footer {
     line-height: 1.5;
 }
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
     .content-grid {
         grid-template-columns: 1fr;
@@ -317,5 +454,17 @@ footer {
     
     .stat-label {
         font-size: 0.8rem;
+    }
+
+    .favorite-item {
+        padding: 10px 8px;
+    }
+    
+    .favorite-title {
+        font-size: 0.85rem;
+    }
+    
+    .favorite-date {
+        font-size: 0.7rem;
     }
 }

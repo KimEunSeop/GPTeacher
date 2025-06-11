@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>즐겨찾기 - AI Teacher</title>
+    <link rel="stylesheet" href="css/favorites.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">AI Teacher</div>
+            <div class="user-menu">
+                <div class="nav-links">
+                    <a href="dashboard.html" class="nav-link">대시보드</a>
+                    <a href="mypage.html" class="nav-link">마이페이지</a>
+                    <a href="logout.php" class="nav-link">로그아웃</a>
+                </div>
+                <div class="user-info" id="userInfo">
+                    로딩 중...
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="mypage.html">← 마이페이지로 돌아가기</a>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">⭐ 즐겨찾기 문제</h1>
+            <div class="page-subtitle" id="pageSubtitle">저장한 문제들을 확인하세요</div>
+        </div>
+
+        <div class="favorites-container">
+            <div class="favorites-header">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="문제 제목으로 검색..." class="search-input">
+                    <button class="search-btn" onclick="searchFavorites()">🔍</button>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">전체</button>
+                    <button class="filter-btn" data-filter="recent">최근 1주일</button>
+                    <button class="filter-btn" data-filter="month">이번 달</button>
+                </div>
+            </div>
+
+            <div class="favorites-content">
+                <div class="loading" id="loadingState">
+                    <div class="spinner"></div>
+                    <div>즐겨찾기 목록을 불러오는 중...</div>
+                </div>
+
+                <div class="favorites-grid" id="favoritesGrid" style="display: none;">
+                    <!-- 즐겨찾기 문제들이 여기에 동적으로 로드됩니다 -->
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">⭐</div>
+                    <div class="empty-title">즐겨찾기한 문제가 없습니다</div>
+                    <div class="empty-desc">문제 상세 페이지에서 별표를 클릭하여 즐겨찾기에 추가해보세요!</div>
+                    <a href="dashboard.html" class="btn btn-primary">새 문제 생성하기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 31253) 충청남도 천안시 동남구 병천면 충절로 1600 (가전리, 한국기술교육대학교) Tel. 010-3658-7761 | Copyrightⓒ2025 AI Teacher. All rights reserved.</p>
+    </footer>
+
+    <script src="js/favorites.js"></script>
+</body>
+</html>
